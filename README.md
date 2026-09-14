@@ -85,4 +85,4 @@ Start the API, then visit [http://localhost:4000/docs](http://localhost:4000/doc
 
 ## Demo media
 
-The dashboard is designed to be captured as a short demo video after deployment. Screenshots can be generated from the seeded dashboard with Playwright; no patient imagery is used.
+The dashboard is designed to be captured as a short demo video after deployment. The local UI is intentionally text-first and contains no patient imagery; add a screenshot or short screen recording to this section when publishing the Render demo URL.
