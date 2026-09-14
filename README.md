@@ -54,7 +54,7 @@ See [.env.example](.env.example). Never commit real secrets. Production deployme
 
 ## Database setup
 
-`apps/api/migrations/001_initial.sql` creates tables and search indexes. `npm run db:migrate` applies it; `npm run db:seed` inserts synthetic records. The API also has an in-memory fallback so the UI can be previewed without PostgreSQL.
+`apps/api/migrations/001_initial.sql` creates tables and search indexes; `002_demo_seed.sql` inserts synthetic records. `npm run db:migrate` applies all ordered SQL migrations and `npm run db:seed` loads the demo fixture. Docker Compose waits for PostgreSQL health before starting the API. The API also has an in-memory fallback so the UI can be previewed without PostgreSQL.
 
 ## Testing
 
