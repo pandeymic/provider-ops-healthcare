@@ -69,6 +69,8 @@ Start the API, then visit [http://localhost:4000/docs](http://localhost:4000/doc
 
 `render.yaml` provisions a Docker-based API, web service, and PostgreSQL database. Deploy it from the Render dashboard after connecting the repository, then set the web service's `NEXT_PUBLIC_API_URL` to the API URL. A live demo link is intentionally not fabricated in this repository; publish the generated Render URL here after deployment.
 
+Live demo: pending first Render deployment. The repository is deployment-ready, but no hosting account or public URL is available in this workspace.
+
 ## Engineering decisions
 
 - Synthetic data only: no real names, identifiers, or external patient system.
@@ -85,4 +87,6 @@ Start the API, then visit [http://localhost:4000/docs](http://localhost:4000/doc
 
 ## Demo media
 
-The dashboard is designed to be captured as a short demo video after deployment. The local UI is intentionally text-first and contains no patient imagery; add a screenshot or short screen recording to this section when publishing the Render demo URL.
+![Provider Ops dashboard preview](docs/dashboard-preview.svg)
+
+The preview uses synthetic records only and contains no patient imagery. A short browser recording can be captured from the same seeded dashboard after deployment.
