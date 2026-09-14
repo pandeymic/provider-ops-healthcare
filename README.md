@@ -15,6 +15,10 @@ Provider Ops is a healthcare-adjacent operations dashboard for a fictional care 
 - Jest + Supertest API tests and React Testing Library UI tests
 - Docker Compose for local orchestration and Render blueprint for deployment
 
+## Why this project
+
+This portfolio project is designed to demonstrate the exact full-stack workflow expected in a Node.js / Python / SQL / Docker healthcare product team: typed REST APIs, responsive React UI, relational schema design, automation, tests, CI, code-quality hooks, and deployment-aware documentation. See the [role alignment walkthrough](docs/role-alignment.md).
+
 ## Architecture
 
 ```mermaid
@@ -70,6 +74,8 @@ Start the API, then visit [http://localhost:4000/docs](http://localhost:4000/doc
 `render.yaml` provisions a Docker-based API, web service, and PostgreSQL database. Deploy it from the Render dashboard after connecting the repository, then set the web service's `NEXT_PUBLIC_API_URL` to the API URL. A live demo link is intentionally not fabricated in this repository; publish the generated Render URL here after deployment.
 
 Live demo: pending first Render deployment. The repository is deployment-ready, but no hosting account or public URL is available in this workspace.
+
+Azure path: deploy the API and web Docker images to Azure Container Apps, attach Azure Database for PostgreSQL Flexible Server, and run the Python reminder command as a Container Apps Job or scheduled GitHub Actions workflow. The service boundaries in this repository are intentionally compatible with that migration.
 
 ## Engineering decisions
 
