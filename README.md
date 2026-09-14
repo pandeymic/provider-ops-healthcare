@@ -25,7 +25,7 @@ flowchart LR
   J[Python reminder worker] --> P
 ```
 
-The API uses NestJS-inspired modules, controllers, DTO validation, and service boundaries while keeping the demo compact enough to run from a fresh checkout. `apps/api/src` is organized for an eventual NestJS migration without hiding the Express request lifecycle.
+The API is bootstrapped by NestJS (`AppModule` + `NestFactory`) over an Express-compatible route layer. This keeps the request lifecycle familiar while giving the service a real NestJS composition root for adding controllers, DTOs, and feature modules.
 
 ## Tech stack
 
