@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: provider_ops
+      POSTGRES_PASSWORD: provider_ops
+      POSTGRES_DB: provider_ops
+    ports: ["5432:5432"]
+    volumes: ["provider_ops_data:/var/lib/postgresql/data"]
+  api:
+    build: ./apps/api
+    environment:
+      DATABASE_URL: postgresql://provider_ops:provider_ops@postgres:5432/provider_ops
+      API_PORT: 4000
+      JWT_SECRET: local-compose-secret
+    ports: ["4000:4000"]
+    depends_on: [postgres]
+  web:
+    build: ./apps/web
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:4000/api
+    ports: ["3000:3000"]
+    depends_on: [api]
+volumes:
+  provider_ops_data:
