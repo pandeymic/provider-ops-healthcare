@@ -8,12 +8,18 @@ import openapi from '../openapi.json';
 const app = express(); app.use(cors()); app.use(express.json());
 const secret = process.env.JWT_SECRET || 'demo-secret';
 type User = { email:string; role:Role }; type Authed = Request & { user?:User };
+const demoUsers:Record<string,{role:Role;password:string}> = {
+  'admin@northstar.test': {role:'admin',password:'demo-password'},
+  'scheduler@northstar.test': {role:'scheduler',password:'demo-password'},
+  'billing@northstar.test': {role:'billing',password:'demo-password'},
+  'demo@northstar.test': {role:'admin',password:'demo-password'}
+};
 const auth = (req:Authed,res:Response,next:NextFunction) => { const token=req.headers.authorization?.replace('Bearer ',''); if (!token) return res.status(401).json({message:'Authentication required'}); try { req.user=jwt.verify(token,secret) as User; next(); } catch { res.status(401).json({message:'Invalid token'}); } };
 const role = (...allowed:Role[]) => (req:Authed,res:Response,next:NextFunction) => req.user && allowed.includes(req.user.role) ? next() : res.status(403).json({message:'Insufficient role'});
 const page = <T>(items:T[], req:Request) => { const q=String(req.query.q||'').toLowerCase(); const pageNum=Math.max(1,Number(req.query.page||1)); const limit=Math.min(50,Math.max(1,Number(req.query.limit||10))); const filtered=q?items.filter(x=>JSON.stringify(x).toLowerCase().includes(q)):items; const sortBy=String(req.query.sortBy||''); const direction=req.query.order==='desc'?-1:1; const sorted=sortBy?[...filtered].sort((a,b)=>String((a as Record<string,unknown>)[sortBy]??'').localeCompare(String((b as Record<string,unknown>)[sortBy]??''))*direction):filtered; return {data:sorted.slice((pageNum-1)*limit,pageNum*limit),pagination:{page:pageNum,limit,total:sorted.length,totalPages:Math.ceil(sorted.length/limit),sortBy:sortBy||null,order:direction===1?'asc':'desc'}}; };
 
 app.get('/health',(_,res)=>res.json({status:'ok',syntheticData:true}));
-app.post('/api/auth/login',(req,res)=>{ const email=req.body.email||'demo@northstar.test'; const roleName=(req.body.role||'admin') as Role; const user={email,role:roleName}; res.json({token:jwt.sign(user,secret,{expiresIn:'8h'}),user}); });
+app.post('/api/auth/login',(req,res)=>{ const email=String(req.body.email||'').toLowerCase(); const account=demoUsers[email]; if(!account||req.body.password!==account.password) return res.status(401).json({message:'Invalid demo credentials'}); const requestedRole=req.body.role as Role|undefined; if(requestedRole&&requestedRole!==account.role) return res.status(403).json({message:'Role does not match this demo account'}); const user={email,role:account.role}; res.json({token:jwt.sign(user,secret,{expiresIn:'8h'}),user}); });
 app.get('/api/providers',auth,(req,res)=>res.json(page(providers,req)));
 app.get('/api/patients',auth,(req,res)=>res.json(page(patients,req)));
 app.post('/api/providers',auth,role('admin'),(req:Authed,res)=>{ const {name,specialty,location}=req.body; if(!name||!specialty||!location) return res.status(400).json({message:'name, specialty, and location are required'}); const item={id:`pr-${Date.now()}`,name,specialty,location,active:true}; providers.push(item); audit(req.user!.email,'created','provider',item.id,{specialty}); res.status(201).json(item); });

@@ -22,6 +22,16 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+  reminder-worker:
+    image: python:3.12-alpine
+    working_dir: /workspace
+    volumes: ["./worker:/workspace/worker:ro"]
+    environment:
+      API_URL: http://api:4000/api
+      DEMO_EMAIL: demo@northstar.test
+      DEMO_PASSWORD: demo-password
+    command: ["python", "worker/reminders.py"]
+    depends_on: [api]
   web:
     build: ./apps/web
     environment:

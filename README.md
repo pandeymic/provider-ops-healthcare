@@ -65,6 +65,14 @@ npm run lint
 
 The API suite covers authentication, pagination, appointment conflict validation, and audit events. The web suite covers dashboard filters and claim status presentation. Add Playwright smoke tests against the Docker Compose stack for a full browser run.
 
+The synthetic reminder worker can run against the local API with:
+
+```bash
+API_URL=http://localhost:4000/api python worker/reminders.py
+```
+
+It only prints dry-run reminders and never contacts a messaging provider. Docker Compose also includes a one-shot `reminder-worker` service.
+
 ## API documentation
 
 Start the API, then visit [http://localhost:4000/docs](http://localhost:4000/docs) or read the OpenAPI document at [apps/api/openapi.yaml](apps/api/openapi.yaml). Main routes include `POST /api/auth/login`, `GET /api/appointments`, `POST /api/appointments`, `PATCH /api/appointments/:id/status`, `GET /api/claims`, and `GET /api/audit-logs`.
